@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "ingreso-egreso-app-3f41e": {
+      "hosting": {
+        "App-Redux": [
+          "ingreso-egreso-app-3f41e"
+        ]
+      }
+    }
+  }
+}
