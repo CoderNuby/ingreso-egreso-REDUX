@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+import { map } from 'rxjs/operators';
+
 
 import { Usuario } from '../models/usuario.model';
 
@@ -13,9 +15,11 @@ export class AuthService {
 
   initAuthListener() {
     this.auth.authState.subscribe((usuario) => {
-      console.log(usuario);
-      console.log(usuario.uid);
-      console.log(usuario.email);
+      if(usuario){
+        console.log(usuario);
+        console.log(usuario.uid);
+        console.log(usuario.email);
+      }
     });
   }
 
@@ -29,5 +33,9 @@ export class AuthService {
   
   logOut(){
     return this.auth.signOut();
+  }
+
+  isAuth() {
+    return this.auth.authState.pipe(map(usuario => usuario != null));
   }
 }
