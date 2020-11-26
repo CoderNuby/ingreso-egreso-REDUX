@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { AppState } from 'src/app/app.reducer';
 import { Usuario } from 'src/app/models/usuario.model';
 import { AuthService } from 'src/app/services/auth.service';
+import * as ui from 'src/app/shared/ui.actions';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,16 +14,21 @@ import Swal from 'sweetalert2';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginFormulario: FormGroup;
 
   usuario: Usuario;
+  
+  cargando: boolean = false;
+
+  uiSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
@@ -28,21 +37,31 @@ export class LoginComponent implements OnInit {
       email: [ '', [Validators.required , Validators.email]],
       password: [ '', Validators.required]
     });
+
+    this.uiSubscription = this.store.select('ui').subscribe((ui) => {
+      this.cargando = ui.isLoading;
+
+      console.log("cargando");
+    });
+  }
+
+  ngOnDestroy(){
+    this.uiSubscription.unsubscribe();
   }
 
   loginUsuario(){
-    Swal.fire({
-      title: 'Cargando...',
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      }
-    });
+
+    this.store.dispatch(ui.isLoading());
+
     this.guardarDataUsuario();
     this.authService.loginUsuario(this.usuario).then((res) => {
       console.log(res);
-      Swal.close();
+
+      this.store.dispatch(ui.stopLoading());
+
       this.router.navigate(['/']);
     }).catch((error) => {
+      this.store.dispatch(ui.stopLoading());
       Swal.fire({
         icon: 'error',
         title: 'Error',

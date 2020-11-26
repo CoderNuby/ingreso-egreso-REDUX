@@ -48,8 +48,13 @@
 
             <div class="form-group">
               <button
+              *ngIf="!cargando"
               [disabled]="formulario.invalid"
               type="submit" class="btn btn-primary submit-btn btn-block">Crear cuenta</button>
+
+              <div *ngIf="cargando" class="bg-warning text-center">
+                <i class="fa fa-spin fa-sync"></i>  Esperre...
+              </div>
             </div>
             <div class="text-block text-center my-3">
               <span class="text-small font-weight-semibold">ya tienes una cuenta?</span>
