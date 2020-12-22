@@ -1,7 +1,7 @@
 import { state } from '@angular/animations';
 import { createReducer, on } from '@ngrx/store';
 import { Usuario } from '../models/usuario.model';
-import { setUser } from './auth.actions';
+import { setUser, unsetUser } from './auth.actions';
 
 export interface State {
     user: Usuario; 
@@ -14,7 +14,7 @@ export const initialState: State = {
 const _authReducer = createReducer(initialState,
 
     on(setUser, (state, {user}) => ({ ...state, user: {...user}})),
-    on(setUser, state => ({ ...state, user: null}))
+    on(unsetUser, state => ({ ...state, user: null}))
 
 );
 

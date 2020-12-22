@@ -43,10 +43,10 @@ export class AuthService {
 
   crearUsuario(usuario: Usuario) {
     return this.auth.createUserWithEmailAndPassword(usuario.email, usuario.password).then(({user}) => {
-      const usuarioNuevo = new Usuario(user.uid, usuario.nombre, user.email);
+      const usuarioNuevo = new Usuario(usuario.nombre, user.email, user.uid);
 
       return this.firestore.doc(`${usuarioNuevo.id}/usuario`).set({
-        id: usuarioNuevo.id,
+        uid: usuarioNuevo.id,
         nombre: usuarioNuevo.nombre,
         email: usuarioNuevo.email
       });
