@@ -18,6 +18,11 @@ import { Usuario } from '../models/usuario.model';
 export class AuthService {
 
   usuarioSubscrito: Subscription;
+  private _usuario: Usuario;
+
+  get usuario() {
+    return this._usuario;
+  }
 
   constructor(
     private auth: AngularFireAuth,
@@ -30,11 +35,14 @@ export class AuthService {
       if(usuario){
         this.usuarioSubscrito = this.firestore.doc(`${usuario.uid}/usuario`).valueChanges().subscribe((user: any) => {
           console.log("Respuesta:: ", user);
-          let newUser: Usuario = new Usuario(user.nombre, user.email, user.id);
+          let newUser: Usuario = new Usuario(user.nombre, user.email, user.uid);
+
+          this._usuario = newUser;
 
           this.store.dispatch(auth.setUser({user: newUser}));
         });
       }else{
+        this._usuario = null;
         this.store.dispatch(auth.unsetUser());
         this.usuarioSubscrito.unsubscribe();
       }
