@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.uiSubscription = this.store.select('ui').subscribe((ui) => {
       this.cargando = ui.isLoading;
 
-      console.log("cargando");
     });
   }
 
@@ -55,7 +54,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.guardarDataUsuario();
     this.authService.loginUsuario(this.usuario).then((res) => {
-      console.log(res);
 
       this.store.dispatch(ui.stopLoading());
 

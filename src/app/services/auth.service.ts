@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 
 import * as auth from 'src/app/auth/auth.actions';
 import { AppState } from '../app.reducer';
+import * as ingresoEgresoActions from '../ingreso-egreso/ingreso-egreso.actions';
 
 
 import { Usuario } from '../models/usuario.model';
@@ -34,7 +35,6 @@ export class AuthService {
     this.auth.authState.subscribe((usuario) => {
       if(usuario){
         this.usuarioSubscrito = this.firestore.doc(`${usuario.uid}/usuario`).valueChanges().subscribe((user: any) => {
-          console.log("Respuesta:: ", user);
           let newUser: Usuario = new Usuario(user.nombre, user.email, user.uid);
 
           this._usuario = newUser;
@@ -44,6 +44,7 @@ export class AuthService {
       }else{
         this._usuario = null;
         this.store.dispatch(auth.unsetUser());
+        this.store.dispatch(ingresoEgresoActions .unSetItems());
         this.usuarioSubscrito.unsubscribe();
       }
     });

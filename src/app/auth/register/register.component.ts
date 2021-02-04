@@ -62,7 +62,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     this.guardarDataUsuario();
     this.authService.crearUsuario(this.usuario).then((credenciales) => {
-      console.log(credenciales);
 
       this.store.dispatch(ui.stopLoading());
 
